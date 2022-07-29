@@ -1,9 +1,18 @@
 import * as React from 'react'
 import { useRegistration, useLogin } from './authApi'
 
-function Auth() {
-    const [, callRegistration] = useRegistration()
-    const [, callLogin] = useLogin()
+function Auth({ actionAfterLogin }) {
+    const [registrationResult, callRegistration] = useRegistration()
+    const [loginResult, callLogin] = useLogin()
+
+    React.useEffect(() => {
+        if (registrationResult != null || loginResult != null) {
+            const result = registrationResult ?? loginHandler
+            if (result.error == null) {
+                actionAfterLogin()
+            }
+        }
+    }, [registrationResult, loginResult])
 
     const loginHandler = (event) => {
         event.preventDefault()
@@ -29,12 +38,6 @@ function Auth() {
             password,
         }
 
-        // fetch('http://localhost:3001/registration', {
-        //     method: 'POST',
-        //     body: JSON.stringify(body),
-        //     headers: { 'Content-Type': 'application/json' },
-        //     credentials: 'include',
-        // }).then(res => res.json()).then(console.log)
         callRegistration({
             body: JSON.stringify(body)
         })

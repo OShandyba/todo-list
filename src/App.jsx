@@ -4,26 +4,27 @@ import Auth from './Auth'
 import { useFetch } from './useFetch'
 import './App.css'
 
-// const toDoList = localStorage.hasOwnProperty(TASK_LIST_KEY) ? JSON.parse(localStorage.getItem(TASK_LIST_KEY)) : []
-// const TASK_LIST_KEY = 'taskList'
-
-
 function App() {
     const [tasks, fetchTasks] = useFetch({ url: '/tasks' })
+    const [user, fetchUser] = useFetch({ url: '/user' })
 
-    React.useEffect(() => {
+    const reload = () => {
+        fetchUser()
         fetchTasks()
+    }
+    React.useEffect(() => {
+        reload()
     }, [])
 
-    console.log(tasks)
+    console.log(tasks, user)
 
     return (
         <div>
-            {tasks != null ? (
-                tasks.error === 'Unauthorized' ? (
-                    <Auth />
+            {user != null && tasks != null ? (
+                user.error === 'Unauthorized' ? (
+                    <Auth actionAfterLogin={reload} />
                 ) : (
-                    <TaskList tasks={tasks} fetchTasks={fetchTasks} />
+                    <TaskList user={user} tasks={tasks} fetchTasks={fetchTasks} />
                 )
             ) : (
                 '...loading'

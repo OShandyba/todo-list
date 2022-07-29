@@ -1,13 +1,20 @@
 import * as React from 'react'
 import { useLogout } from './authApi'
+import { fetcher } from './useFetch'
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+
 
 const TASK_LIST_KEY = 'taskList'
 const toDoList = localStorage.hasOwnProperty(TASK_LIST_KEY) ? JSON.parse(localStorage.getItem(TASK_LIST_KEY)) : []
 
-function TaskList({ tasks }) {
+function TaskList({ tasks, fetchTasks, user }) {
     const [list, setList] = React.useState(toDoList)
     const [, callLogout] = useLogout()
-    console.log(tasks)
+    const [editing, setEditing] = React.useState({})
 
     React.useEffect(() => {
         localStorage.setItem(TASK_LIST_KEY, JSON.stringify(list))
@@ -18,71 +25,93 @@ function TaskList({ tasks }) {
         event.preventDefault()
 
         const task = {
-            title: document.getElementById('task').value,
+            title: document.getElementById('task-input').value
         }
-            ({
-                task: 'title',
-                id: 1
-            })
-        setList((list) => list.concat({ task, id: list.length && list[list.length - 1].id + 1 }))
+        fetcher({
+            method: 'POST',
+            url: '/task',
+            body: JSON.stringify(task)
+        }).then(() => {
+            fetchTasks()
+        })
     }
+    console.log(editing)
 
-    const doneTask = ({ target }) => {
-        const id = +target.dataset.taskId
+    const onClickHandler = ({ target }) => {
+        const id = target.dataset.taskId
 
         if (target.classList.contains('edit')) {
-            setList(list.map(el => (
-                id === el.id ? { ...el, edit: true } : el
-            )))
+            setEditing({ ...editing, [id]: true })
         } else if (target.classList.contains('submit-edit')) {
-            const editedTask = document.getElementById(`edit-input-${id}`).value
-            setList(list.map(el => (
-                id === el.id ? { ...el, task: editedTask, edit: false } : el
-
-            )))
+            const newTaskTitle = document.getElementById(`edit-input-${id}`).value
+            fetcher({
+                method: 'PATCH',
+                url: `/task/${id}`,
+                body: JSON.stringify({ title: newTaskTitle })
+            }).then(() => {
+                fetchTasks()
+                setEditing({ [id]: false })
+            })
         } else if (target.classList.contains('delete')) {
-            setList(list.filter((el) => el.id !== id))
+            fetcher({
+                method: 'DELETE',
+                url: `/task/${id}`,
+            }).then(() => {
+                fetchTasks()
+            })
         } else if (target.dataset.hasOwnProperty('taskId')) {
-            setList(list.map((el) => (
-                id === el.id ? { ...el, done: !el.done } : el
-            )))
+            fetcher({
+                method: 'PATCH',
+                url: `/task/${id}`,
+                body: JSON.stringify({ done: true })
+            }).then(() => {
+                fetchTasks()
+            })
         }
     }
 
-    const deleteAll = () => setList([])
+    const deleteAll = () => {
+        fetcher({
+            method: 'DELETE',
+            url: `/tasks`
+        }).then(() => {
+            fetchTasks()
+        })
+    }
 
-    const logoutHandler = (event) => {
+    const logoutHandler = () => {
         callLogout()
     }
 
     return (
+
         <div>
-            <div>User - username</div>
+            <div>User - {user.username}</div>
             <form onSubmit={addToList}>
-                ToDo: <input type="text" id="task" />
+                ToDo: <input type="text" id="task-input" />
                 <button type="submit">Add</button>
             </form>
-            <ul onClick={doneTask}>
-                {list.map((el) => (
-                    <li className={el.done ? 'completed' : 'inProgress'} key={el.id} data-task-id={el.id}>
-                        Task: {el.task}
+            <ul onClick={onClickHandler}>
+                {tasks.error == null ? tasks.map((task) => (
+                    <li className={task.done ? 'completed' : 'inProgress'} key={task.id} data-task-id={task.id}>
+                        Task: {task.title}
 
                         {
-                            el.edit ? (
+                            editing[task.id] ? (
                                 <>
-                                    <input type="text" id={`edit-input-${el.id}`} />
-                                    <button data-task-id={el.id} className="submit-edit">OK</button>
+                                    <input type="text" id={`edit-input-${task.id}`} />
+                                    <button data-task-id={task.id} className="submit-edit">OK</button>
                                 </>
+
                             ) : (
-                                <button data-task-id={el.id} className='edit'>edit</button>
+                                <button data-task-id={task.id} className='edit'>edit</button>
                             )
                         }
 
-                        <button data-task-id={el.id} className='delete'>x</button>
+                        <button data-task-id={task.id} className='delete'>x</button>
 
                     </li>)
-                )
-                }
+                ) : <span></span>}
             </ul >
             <div>
                 <button onClick={deleteAll} className='clear-list'>Delete all tasks</button>

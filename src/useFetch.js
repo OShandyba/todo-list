@@ -10,13 +10,18 @@ const defaultFetchParams = {
     credentials: 'include',
 }
 
+export function fetcher(options = {}) {
+    const { url = '/', ...restOptions } = { ...defaultFetchParams, ...options }
+
+    return fetch(API_URL + url, restOptions)
+        .then(res => res.json())
+}
+
 export function useFetch(defaultOptions = {}) {
     const [data, setData] = useState(null)
 
     const fetchData = (options = {}) => {
-        const { url = '/', ...restOptions } = { ...defaultFetchParams, ...defaultOptions, ...options }
-        fetch(API_URL + url, restOptions)
-            .then(res => res.json())
+        fetcher({ ...defaultOptions, ...options })
             .then(data => setData(data))
     }
 
