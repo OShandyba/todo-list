@@ -1,5 +1,11 @@
-import * as React from 'react'
-import { useRegistration, useLogin } from './authApi'
+import * as React from 'react';
+import { useRegistration, useLogin } from './authApi';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import { Box, FormControl, TextField } from '@mui/material';
+import { Container } from '@mui/material';
+import Paper from '@mui/material/Paper';
+
 
 function Auth({ actionAfterLogin }) {
     const [registrationResult, callRegistration] = useRegistration()
@@ -45,23 +51,26 @@ function Auth({ actionAfterLogin }) {
     }
 
     return (
-        <div id='login-registration'>
-            <form onSubmit={loginHandler}>
-                <h2>Login</h2>
-                Name: <input type="text" id="login-name-input"></input>
-                Password: <input type="password" id="login-password-input"></input>
-                <button className="login">Login</button>
-            </form>
-            <br />
-            <form onSubmit={registrateHandler}>
-                <h2>Registration</h2>
-                Name: <input type="text" id="registration-name-input"></input>
-                Password: <input type="password" id="registration-password-input"></input>
-                {/* Confirm password: <input type="password" id="registration-confirm-password-input"></input> */}
-                <button className="registration">Registration</button>
-
-            </form>
-        </div>
+        <Container maxWidth="md">
+            <Box id='login-registration' >
+                <Paper elevation={4} sx={{ p: '10px', background: 'linear-gradient(to bottom left, #0066cc -1%, #ff99ff 69%)' }} >
+                    <FormControl sx={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'column', display: 'flex', }} >
+                        <Box component="form" sx={{ flexDirection: 'column', display: 'flex' }} noValidate autoComplete="off" onSubmit={loginHandler}>
+                            <Typography>Login</Typography>
+                            <TextField label="Name:" variant="standard" type="text" id="login-name-input"></TextField>
+                            <TextField label="Password:" variant="standard" type="password" id="login-password-input" ></TextField>
+                            <Button type="submit" sx={{ width: "200px", margin: '20px' }} label="Login" variant="outlined" className="login">Login</Button>
+                        </Box>
+                        <Box component="form" sx={{ flexDirection: 'column', display: 'flex' }} noValidate autoComplete="off" onSubmit={registrateHandler}>
+                            <Typography>Registration</Typography>
+                            <TextField label="Name:" variant="standard" type="text" id="registration-name-input"></TextField>
+                            <TextField label="Password:" variant="standard" type="password" id="registration-password-input" ></TextField>
+                            <Button type="submit" sx={{ width: "200px", margin: '20px' }} label="Registration" variant="outlined" className="Registration">Registration</Button>
+                        </Box>
+                    </FormControl>
+                </Paper>
+            </Box>
+        </Container>
     )
 }
 
