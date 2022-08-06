@@ -53,19 +53,19 @@ function Auth({ actionAfterLogin }) {
     return (
         <Container maxWidth="md">
             <Box id='login-registration' >
-                <Paper elevation={4} sx={{ p: '10px', background: 'linear-gradient(to bottom left, #0066cc -1%, #ff99ff 69%)' }} >
+                <Paper elevation={4} sx={{ p: '10px', background: '#cccccc' }} >
                     <FormControl sx={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'column', display: 'flex', }} >
                         <Box component="form" sx={{ flexDirection: 'column', display: 'flex' }} noValidate autoComplete="off" onSubmit={loginHandler}>
                             <Typography>Login</Typography>
                             <TextField label="Name:" variant="standard" type="text" id="login-name-input"></TextField>
                             <TextField label="Password:" variant="standard" type="password" id="login-password-input" ></TextField>
-                            <Button type="submit" sx={{ width: "200px", margin: '20px' }} label="Login" variant="outlined" className="login">Login</Button>
+                            <Button type="submit" sx={{ width: "200px", margin: '20px', color: 'black', background: '#9494b8', '&:hover': { background: '#666699' } }} label="Login" variant="outlined" className="login">Login</Button>
                         </Box>
                         <Box component="form" sx={{ flexDirection: 'column', display: 'flex' }} noValidate autoComplete="off" onSubmit={registrateHandler}>
                             <Typography>Registration</Typography>
                             <TextField label="Name:" variant="standard" type="text" id="registration-name-input"></TextField>
                             <TextField label="Password:" variant="standard" type="password" id="registration-password-input" ></TextField>
-                            <Button type="submit" sx={{ width: "200px", margin: '20px' }} label="Registration" variant="outlined" className="Registration">Registration</Button>
+                            <Button type="submit" sx={{ width: "200px", margin: '20px', color: 'black', background: '#9494b8', '&:hover': { background: '#666699' } }} label="Registration" variant="outlined" className="Registration">Registration</Button>
                         </Box>
                     </FormControl>
                 </Paper>

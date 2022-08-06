@@ -90,13 +90,13 @@ function TaskList({ tasks, fetchTasks, user }) {
     return (
         <Container maxWidth="lg">
             <Box sx={{ position: 'relative' }} >
-                <Paper elevation={4} sx={{ width: '100%', padding: '10px', background: 'linear-gradient(to bottom left, #0066cc -1%, #ff99ff 69%)' }}>
+                <Paper elevation={4} sx={{ width: '100%', padding: '10px', background: '#cccccc' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={9}>
                             User - {user.username}
                         </Grid>
                         <Grid item xs={3}>
-                            <Button onClick={logoutHandler} variant="contained" sx={{ ml: '180px', color: 'black', background: 'linear-gradient(to bottom left, #9900cc 14%, #cc99ff 97%)' }} >Logout</Button>
+                            <Button onClick={logoutHandler} variant="contained" sx={{ ml: '180px', color: 'black', background: '#9494b8', '&:hover': { background: '#666699' } }} >Logout</Button>
                         </Grid>
                         <Grid item xs={12}>
                             <Box onSubmit={addToList} component="form" sx={{}} noValidate autoComplete="off">
@@ -104,7 +104,7 @@ function TaskList({ tasks, fetchTasks, user }) {
                                     <TextField label="Task to do" id="task-input" type="text" multiline maxRows={6} sx={{ width: '100%' }} InputLabelProps={{ shrink: true, }} />
                                 </Grid>
                                 <Grid item xs={3} sx={{ paddingTop: '5px' }}>
-                                    <Button type="submit" variant="contained">add</Button>
+                                    <Button sx={{ color: 'black', background: '#9494b8', '&:hover': { background: '#666699' } }} type="submit" variant="contained">add</Button>
                                 </Grid>
                             </Box>
                         </Grid>
@@ -118,19 +118,19 @@ function TaskList({ tasks, fetchTasks, user }) {
                                                 editing[task.id] ? (
                                                     <Box sx={{ flexGrow: 1 }}>
                                                         <TextField sx={{ width: '100%' }} multiline maxRows={6} defaultValue={`${task.title}`} type="text" id={`edit-input-${task.id}`} label="Editing" variant="outlined" />
-                                                        <Button data-task-id={task.id} className="submit-edit" sx={{ mt: '5px', py: '2px', px: '8px' }} variant="contained" >OK</Button>
+                                                        <Button data-task-id={task.id} className="submit-edit" sx={{ mt: '5px', py: '2px', px: '8px', color: 'black', background: '#9494b8', '&:hover': { background: '#666699' } }} variant="contained" >OK</Button>
                                                     </Box>
                                                 ) : (
                                                     <>
                                                         <Box sx={{ width: '100%', textDecoration: task.done ? 'line-through' : 'none' }} data-task-id={task.id} >
                                                             {task.title}
                                                         </Box>
-                                                        <Button sx={{ color: 'black' }} data-task-id={task.id} className='edit'>edit</Button>
+                                                        <Button sx={{ margin: '10px', color: 'black', background: '#9494b8', '&:hover': { background: '#666699' } }} variant="contained" data-task-id={task.id} className='edit'>edit</Button>
                                                     </>
                                                 )
                                             }
 
-                                            <Button sx={{ color: 'black', alignItems: 'justify' }} data-task-id={task.id} className='delete'>x</Button>
+                                            <Button sx={{ py: '6px', px: '10px', color: 'black', background: '#9494b8', '&:hover': { background: '#666699' }, }} variant="contained" data-task-id={task.id} className='delete'>x</Button>
                                         </ListItem>)
                                     ) : <Box component="span" m="{1}"></Box>}
 
@@ -140,7 +140,7 @@ function TaskList({ tasks, fetchTasks, user }) {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <Button onClick={deleteAll} className='clear-list' variant="contained">Dellete all tasks</Button>
+                            <Button onClick={deleteAll} sx={{ color: 'black', background: '#9494b8', '&:hover': { background: '#666699' } }} className='clear-list' variant="contained">Dellete all tasks</Button>
                         </Grid>
                     </Grid>
                 </Paper>
